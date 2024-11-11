@@ -1,5 +1,6 @@
 const express = require('express');
 const Movie = require('../models/movie');
+const authenticateToken = require('../middleware/auth');
 const router = express.Router();
 
 router.get('/',async(req,res)=>{
@@ -11,7 +12,7 @@ router.get('/',async(req,res)=>{
     }
 })
 
-router.post('/',async(req,res)=>{
+router.post('/',authenticateToken,async(req,res)=>{
     const newMovie = new Movie(req.body)
     try {
        const savedMovie = await newMovie.save()
