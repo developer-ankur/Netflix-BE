@@ -3,8 +3,10 @@ const User = require('../models/user');
 const bcrypt=require('bcryptjs');
 const jwt=require('jsonwebtoken');
 const router = express.Router();
+const { registerUserSchema } = require('../validators/userValidator');
+const validateRequest = require('../middleware/validateRequest');
 
-router.post('/register',async(req,res)=>{
+router.post('/register',validateRequest(registerUserSchema),async(req,res)=>{
     try {
       // Hash the password
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -12,7 +14,7 @@ router.post('/register',async(req,res)=>{
     const savedUser = await newUser.save();
     res.json(savedUser);
     } catch (error) {
-        res.status(500).json({ error: 'Failed to create user' });
+      next(err);
     }
 })
 
@@ -27,7 +29,7 @@ router.post('/login',async(req,res)=>{
           res.status(400).json({ error: 'Invalid credentials' });
         }
     } catch (error) {
-        res.status(500).json({ error: 'Login failed'  });
+      next(err);
     }
 })
 

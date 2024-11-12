@@ -5,6 +5,7 @@ require('dotenv').config();
 
 const movieRoutes = require('./routes/movies');
 const userRoutes = require('./routes/user');
+const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 
@@ -24,6 +25,7 @@ mongoose.connect(process.env.MONGO_URI, {
 // Routes
 app.use('/api/movies', movieRoutes);
 app.use('/api/users', userRoutes);
+app.use(errorHandler); // Use error handler after routes
 
 // Basic route for testing
 app.get('/', (req, res) => {
